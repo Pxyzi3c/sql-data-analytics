@@ -22,3 +22,28 @@ SELECT *,
   CASE WHEN year IN ('JR', 'SR') THEN player_name
     ELSE NULL END AS upperclass_player
 FROM benn.college_football_players
+
+-- Query that counts the number of 300lb+ players for each of the following regions: West Coast (CA, OR, WA), Texas, and Other (everywhere else).
+SELECT state,
+  weight,
+  CASE WHEN state IN ('CA', 'OR', 'WA') THEN 'West Coast'
+    WHEN state = 'TX' THEN 'Texas'
+    ELSE 'others' END AS region,
+  COUNT(*) AS count
+FROM benn.college_football_players
+WHERE weight >= 300
+GROUP BY state, weight
+ORDER BY state, weight
+
+-- Query that calculates the combined weight of all underclass players (FR/SO) in California as well as the combined weight of all upperclass players (JR/SR) in California.
+SELECT state,
+  year,
+  CASE WHEN year IN ('FR', 'SO') THEN 'Underclass Players'
+    WHEN year IN ('JR', 'SR') THEN 'Upperclass Players'
+    ELSE NULL
+  END AS players_category,
+  SUM(weight) as total_weight
+FROM benn.college_football_players
+WHERE state = 'CA'
+GROUP BY state, year
+ORDER BY players_category
