@@ -8,11 +8,36 @@ SELECT
 FROM
     tutorial.sf_crime_incidents_2014_01
 
+-- =============================================================================    
 -- Query that concatenates the day of the week and the date to form a field that is equivalent to the date field.
+-- =============================================================================    
 SELECT
     incidnt_num,
     day_of_week,
     LEFT (date, 10) AS cleaned_date,
     CONCAT (day_of_week, ', ', LEFT (date, 10)) AS day_and_date
+FROM
+    tutorial.sf_crime_incidents_2014_01
+-- OR
+SELECT
+    day_of_week,
+    date,
+    LEFT (date, 10) AS cleaned_date,
+    day_of_week || ', ' || LEFT (date, 10) AS day_date
+FROM
+    tutorial.sf_crime_incidents_2014_01
+
+-- =============================================================================    
+-- Query that creates a date column formatted YYYY-MM-DD.
+-- =============================================================================    
+SELECT
+    date,
+    CONCAT (
+        SUBSTR (date, 7, 4),
+        '-',
+        LEFT (date, 2),
+        '-',
+        SUBSTR (date, 4, 2)
+    ) AS formatted_date
 FROM
     tutorial.sf_crime_incidents_2014_01
