@@ -43,3 +43,11 @@ SELECT
 FROM tutorial.sf_crime_incidents_cleandate
 GROUP BY 1
 ORDER BY 1 desc
+
+-- =============================================================================
+-- Write a query that shows exactly how long ago each indicent was reported. Assume that the dataset is in Pacific Standard Time (UTC - 8).
+-- =============================================================================
+SELECT incidnt_num,
+  cleaned_date,
+  (NOW() AT TIME ZONE 'UTC-8') - (cleaned_date AT TIME ZONE 'UTC-8') AS how_long_ago
+FROM tutorial.sf_crime_incidents_cleandate
