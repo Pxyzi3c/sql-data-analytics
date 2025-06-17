@@ -33,3 +33,13 @@ SELECT companies.permalink,
          INTERVAL '1 week' AS plus_one_week
 FROM tutorial.crunchbase_companies_clean_date companies
 WHERE founded_at_clean IS NOT NULL
+
+-- =============================================================================
+-- Query that counts the number of incidents reported by week. Cast the week as a date to get rid of the hours/minutes/seconds.
+-- =============================================================================
+SELECT 
+    DATE_TRUNC('week', cleaned_date)::DATE AS week,
+    COUNT(*) AS incident_counts
+FROM tutorial.sf_crime_incidents_cleandate
+GROUP BY 1
+ORDER BY 1 desc
