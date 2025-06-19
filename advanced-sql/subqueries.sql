@@ -31,6 +31,7 @@ ORDER BY 1, 2
 -- =============================================================================
 -- EXERCISES
 -- =============================================================================
+-- Query that selects all Warrant Arrests from the tutorial.sf_crime_incidents_2014_01 dataset, then wrap it in an outer query that only displays unresolved incidents. 
 SELECT sub.* 
 FROM (
     SELECT 
@@ -41,3 +42,17 @@ FROM (
     WHERE descript ILIKE 'warrant arrest'
 ) sub
 WHERE sub.resolution ILIKE 'none'
+
+-- Query that displays the average number of monthly incidents for each category. 
+SELECT 
+    sub.category,
+    AVG(sub.incidents) AS avg_incidents
+FROM (
+    SELECT
+        EXTRACT(MONTH FROM date::DATE) AS month,
+        category,
+        COUNT(*) AS incidents
+    FROM tutorial.sf_crime_incidents_2014_01
+    GROUP BY 1, 2
+) AS sub
+GROUP BY category
