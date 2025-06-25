@@ -56,3 +56,18 @@ FROM (
     GROUP BY 1, 2
 ) AS sub
 GROUP BY category
+
+-- Query that displays all rows from the three categories with the fewest incidents reported.
+SELECT 
+  incidents.*,
+  sub.incidents_count
+FROM tutorial.sf_crime_incidents_2014_01 AS incidents
+INNER JOIN (
+    SELECT category,
+        COUNT(incidnt_num) AS incidents_count
+    FROM tutorial.sf_crime_incidents_2014_01
+    GROUP BY category
+    ORDER BY 2 
+    LIMIT 3 
+) AS sub
+ON incidents.category = sub.category
