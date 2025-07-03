@@ -126,3 +126,33 @@ SELECT
   RANK() OVER (ORDER BY iti.investments DESC) AS ranking
 FROM InvestorsTotalInvestments AS iti
 ORDER BY iti.investments DESC
+
+-- =============================================================================
+-- Write a query that does the same thing as in the previous problem, 
+-- except only for companies that are still operating. 
+-- Hint: operating status is in tutorial.crunchbase_companies. 
+-- =============================================================================
+WITH AllInvestments AS (
+    SELECT investor_permalink, company_permalink
+    FROM tutorial.crunchbase_investments_part1 AS p1
+        
+    UNION ALL
+    
+    SELECT investor_permalink, company_permalink
+    FROM tutorial.crunchbase_investments_part2
+),
+InvestorsTotalInvestments AS (
+    SELECT ai.investor_permalink AS investor_permalink,
+        COUNT(ai.investor_permalink) AS investments
+    FROM AllInvestments AS ai
+    INNER JOIN tutorial.crunchbase_companies AS c
+        ON ai.company_permalink = c.permalink
+    WHERE c.status = 'operating'
+    GROUP BY ai.investor_permalink
+)
+SELECT 
+    iti.investor_permalink,
+    iti.investments,
+    RANK() OVER (ORDER BY iti.investments DESC) AS ranking
+FROM InvestorsTotalInvestments AS iti
+ORDER BY iti.investments DESC
