@@ -101,3 +101,28 @@ FULL JOIN (
     ) AS a
 ON f.founded_quarter = a.acquired_quarter
 ORDER BY "quarter"
+
+-- =============================================================================
+-- Write a query that ranks investors from the combined dataset above by the total number of investments they have made. 
+-- =============================================================================
+WITH AllInvestments AS (
+  SELECT *
+  FROM tutorial.crunchbase_investments_part1
+  
+  UNION ALL
+  
+  SELECT *
+  FROM tutorial.crunchbase_investments_part2
+),
+InvestorsTotalInvestments AS (
+  SELECT investor_permalink,
+    COUNT(investor_permalink) AS investments
+  FROM AllInvestments
+  GROUP BY investor_permalink
+)
+SELECT 
+  iti.investor_permalink,
+  iti.investments,
+  RANK() OVER (ORDER BY iti.investments DESC) AS ranking
+FROM InvestorsTotalInvestments AS iti
+ORDER BY iti.investments DESC
